@@ -91,26 +91,6 @@ export default function Login() {
                       </Button>
                     </CardFooter>
                   </Card>
-                  {/* <Card>
-          <Card.Body>
-            <h2 className="text-center mb-4">Log In</h2>
-            {error && <Alert variant="danger">{error}</Alert>}
-            <Form onSubmit={handleSubmit}>
-                <Label>Email</Label>
-                <Input type="email" ref={emailRef} required />
-           
-                <Label>Password</Label>
-                <Input type="password" ref={passwordRef} required />
-           
-              <Button disabled={loading} className="w-100" type="submit">
-                Log In
-              </Button>
-            </Form>
-            <div className="w-100 text-center mt-3">
-              <Link to="/forgot-password">Forgot Password?</Link>
-            </div>
-          </Card.Body>
-        </Card> */}
                   <div className="text-center">
                     <Link to="/forgot-password">Forgot Password?</Link>
                   </div>
