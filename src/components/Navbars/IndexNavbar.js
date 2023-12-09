@@ -1,23 +1,7 @@
-/*!
 
-=========================================================
-* BLK Design System React - v1.2.2
-=========================================================
-
-* Product Page: https://www.creative-tim.com/product/blk-design-system-react
-* Copyright 2023 Creative Tim (https://www.creative-tim.com)
-* Licensed under MIT (https://github.com/creativetimofficial/blk-design-system-react/blob/main/LICENSE.md)
-
-* Coded by Creative Tim
-
-=========================================================
-
-* The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
-
-*/
 import React from "react";
 import { Link, useNavigate } from "react-router-dom";
-// reactstrap components
+import { useAuth, logout } from "../../context/AuthContext";
 import {
   Button,
   Collapse,
@@ -39,6 +23,7 @@ export default function IndexNavbar() {
   const [collapseOpen, setCollapseOpen] = React.useState(false);
   const [collapseOut, setCollapseOut] = React.useState("");
   const [color, setColor] = React.useState("navbar-transparent");
+  const { logOut, user } = useAuth();
   React.useEffect(() => {
     window.addEventListener("scroll", changeColor);
     return function cleanup() {
@@ -67,6 +52,14 @@ export default function IndexNavbar() {
   };
   const onCollapseExited = () => {
     setCollapseOut("");
+  };
+  const handleLogout = async () => {
+    try {
+      await logOut();
+      navigate("/");
+    } catch (error) {
+      console.log(error.message);
+    }
   };
   return (
     <Navbar className={"fixed-top " + color} color-on-scroll="100" expand="lg">
@@ -150,6 +143,15 @@ export default function IndexNavbar() {
                 <i className="tim-icons icon-single-02" /> My Inventory
               </Button>
             </NavItem>
+            {/* <NavItem>
+              <Button
+                className="nav-link d-none d-lg-block"
+                color="default"
+                onClick={()=>handleLogout()}
+              >
+                Log out
+              </Button>
+            </NavItem> */}
           </Nav>
         </Collapse>
       </Container>

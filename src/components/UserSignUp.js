@@ -28,29 +28,50 @@ export default function UserSignup() {
   const { signup, currentUser } = useAuth();
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
-  const history = useNavigate();
+  const navigate = useNavigate();
 
-  async function handleSubmit(e) {
+  const handleSubmit = async (e) => {
     e.preventDefault();
+
+    setError("");
 
     if (passwordRef.current.value !== passwordConfirmRef.current.value) {
       return setError("Passwords do not match");
     }
 
     try {
-      setError("");
       setLoading(true);
       sendRequest(GENERATE_KEYS).then((res) => {
         console.log("Generated keys successfully ", res);
       });
-      await signup(emailRef.current.value, passwordRef.current.value);
-      history.push("/");
-    } catch {
-      setError("Failed to create an account");
+      await signup(emailRef.current.value , passwordRef.current.value);
+      navigate("/");
+    } catch (err) {
+      setError(err.message);
     }
-
     setLoading(false);
-  }
+  };
+  // async function handleSubmit(e) {
+  //   e.preventDefault();
+
+  //   if (passwordRef.current.value !== passwordConfirmRef.current.value) {
+  //     return setError("Passwords do not match");
+  //   }
+
+  //   try {
+  //     setError("");
+  //     setLoading(true);
+  //     sendRequest(GENERATE_KEYS).then((res) => {
+  //       console.log("Generated keys successfully ", res);
+  //     });
+  //     await signup(emailRef.current.value, passwordRef.current.value);
+  //     history.push("/");
+  //   } catch {
+  //     setError("Failed to create an account");
+  //   }
+
+  //   setLoading(false);
+  // }
 
   return (
     <>
