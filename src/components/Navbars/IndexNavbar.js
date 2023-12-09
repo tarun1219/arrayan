@@ -1,7 +1,6 @@
-
-import React from "react";
+import React, { useContext } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { useAuth, logout } from "../../context/AuthContext";
+// reactstrap components
 import {
   Button,
   Collapse,
@@ -17,13 +16,16 @@ import {
   Row,
   Col,
 } from "reactstrap";
+import { AuthContext, useAuth } from "../../context/AuthContext";
 
 export default function IndexNavbar() {
   let navigate = useNavigate();
   const [collapseOpen, setCollapseOpen] = React.useState(false);
   const [collapseOut, setCollapseOut] = React.useState("");
   const [color, setColor] = React.useState("navbar-transparent");
-  const { logOut, user } = useAuth();
+  const {logout} = useAuth();
+  const {currentUser} = useContext(AuthContext);
+
   React.useEffect(() => {
     window.addEventListener("scroll", changeColor);
     return function cleanup() {
@@ -53,14 +55,6 @@ export default function IndexNavbar() {
   const onCollapseExited = () => {
     setCollapseOut("");
   };
-  const handleLogout = async () => {
-    try {
-      await logOut();
-      navigate("/");
-    } catch (error) {
-      console.log(error.message);
-    }
-  };
   return (
     <Navbar className={"fixed-top " + color} color-on-scroll="100" expand="lg">
       <Container>
@@ -68,6 +62,9 @@ export default function IndexNavbar() {
           <NavbarBrand to="/" tag={Link} id="navbar-brand">
             <span style={{fontWeight: 'bold', fontSize: '1.5rem'}}>Arrayán</span>
           </NavbarBrand>
+          {/* <UncontrolledTooltip placement="bottom" target="navbar-brand">
+            Designed and Coded by Creative Tim
+          </UncontrolledTooltip> */}
           <button
             aria-expanded={collapseOpen}
             className="navbar-toggler navbar-toggler"
@@ -89,7 +86,7 @@ export default function IndexNavbar() {
             <Row>
               <Col className="collapse-brand" xs="6">
                 <a href="#pablo" onClick={(e) => e.preventDefault()}>
-                  BLK•React
+                Arrayán
                 </a>
               </Col>
               <Col className="collapse-close text-right" xs="6">
@@ -104,6 +101,62 @@ export default function IndexNavbar() {
             </Row>
           </div>
           <Nav navbar>
+            {/* <NavItem className="p-0">
+              <NavLink
+                data-placement="bottom"
+                href="https://twitter.com/CreativeTim"
+                rel="noopener noreferrer"
+                target="_blank"
+                title="Follow us on Twitter"
+              >
+                <i className="fab fa-twitter" />
+                <p className="d-lg-none d-xl-none">Twitter</p>
+              </NavLink>
+            </NavItem>
+            <NavItem className="p-0">
+              <NavLink
+                data-placement="bottom"
+                href="https://www.facebook.com/CreativeTim"
+                rel="noopener noreferrer"
+                target="_blank"
+                title="Like us on Facebook"
+              >
+                <i className="fab fa-facebook-square" />
+                <p className="d-lg-none d-xl-none">Facebook</p>
+              </NavLink>
+            </NavItem>
+            <NavItem className="p-0">
+              <NavLink
+                data-placement="bottom"
+                href="https://www.instagram.com/CreativeTimOfficial"
+                rel="noopener noreferrer"
+                target="_blank"
+                title="Follow us on Instagram"
+              >
+                <i className="fab fa-instagram" />
+                <p className="d-lg-none d-xl-none">Instagram</p>
+              </NavLink>
+            </NavItem> */}
+            <NavItem>
+            <Button
+                className="nav-link d-none d-lg-block"
+                color="default"
+                onClick={()=>navigate("/track")}
+              >
+                <i className="tim-icons icon-zoom-split" /> Search
+              </Button>
+            </NavItem>
+            <NavItem>
+              <Button
+                className="nav-link d-none d-lg-block"
+                color="default"
+                onClick={()=>navigate("/inventory")}
+              >
+                <i className="tim-icons icon-single-02" /> My Inventory
+              </Button>
+            </NavItem>
+            {
+              currentUser==null?
             <UncontrolledDropdown nav>
               <DropdownToggle
                 caret
@@ -126,32 +179,16 @@ export default function IndexNavbar() {
                   Register
                 </DropdownItem>
               </DropdownMenu>
-            </UncontrolledDropdown>
+            </UncontrolledDropdown>: 
+            <NavItem>
             <Button
                 className="nav-link d-none d-lg-block"
                 color="default"
-                onClick={()=>navigate("/track")}
+                onClick={async ()=>await logout()}
               >
-                <i className="tim-icons icon-zoom-split" /> Search
+                <i className="tim-icons icon-button-power" /> Logout
               </Button>
-            <NavItem>
-              <Button
-                className="nav-link d-none d-lg-block"
-                color="default"
-                onClick={()=>navigate("/inventory")}
-              >
-                <i className="tim-icons icon-single-02" /> My Inventory
-              </Button>
-            </NavItem>
-            <NavItem>
-              <Button
-                className="nav-link d-none d-lg-block"
-                color="default"
-                onClick={()=>navigate("/")}
-              >
-                Log out
-              </Button>
-            </NavItem>
+              </NavItem>}
           </Nav>
         </Collapse>
       </Container>
