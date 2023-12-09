@@ -1,3 +1,4 @@
+
 import React, { useRef, useState } from "react";
 import {
   Form,
@@ -23,22 +24,19 @@ export default function Login() {
   const { login } = useAuth();
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
-  const history = useNavigate();
-
-  async function handleSubmit(e) {
+  const navigate = useNavigate();
+  const handleSubmit = async (e) => {
+    console.log(emailRef.current.value, passwordRef.current.value);
     e.preventDefault();
+    setError("");
     try {
-      setError("");
-      setLoading(true);
       await login(emailRef.current.value, passwordRef.current.value);
-      history.push("/");
-      history("/inventory");
-    } catch {
-      setError("Failed to log in");
+      navigate("/home");
+    } catch (err) {
+      setError(err.message);
     }
-
     setLoading(false);
-  }
+  };
 
   return (
     <>
@@ -71,11 +69,12 @@ export default function Login() {
                           placeholder="Email"
                           type="text"
                         />
+                        
                         <Input
                           style={{ marginTop: "1rem" }}
                           innerRef={passwordRef}
                           placeholder="Password"
-                          type="text"
+                          type="password"
                         />
                       </Form>
                     </CardBody>
@@ -91,6 +90,26 @@ export default function Login() {
                       </Button>
                     </CardFooter>
                   </Card>
+                  {/* <Card>
+          <Card.Body>
+            <h2 className="text-center mb-4">Log In</h2>
+            {error && <Alert variant="danger">{error}</Alert>}
+            <Form onSubmit={handleSubmit}>
+                <Label>Email</Label>
+                <Input type="email" ref={emailRef} required />
+           
+                <Label>Password</Label>
+                <Input type="password" ref={passwordRef} required />
+           
+              <Button disabled={loading} className="w-100" type="submit">
+                Log In
+              </Button>
+            </Form>
+            <div className="w-100 text-center mt-3">
+              <Link to="/forgot-password">Forgot Password?</Link>
+            </div>
+          </Card.Body>
+        </Card> */}
                   <div className="text-center">
                     <Link to="/forgot-password">Forgot Password?</Link>
                   </div>

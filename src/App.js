@@ -7,6 +7,7 @@ import React from "react"
 import InventoryPage from "./pages/InventoryPage";
 import SupplyChainPage from "./pages/SupplyChainPage";
 
+
 function App() {
   return (
     
@@ -14,8 +15,8 @@ function App() {
         <Router>
           <AuthProvider>
             <Routes>
-              <Route exact path="/" element={<LandingPage/>} />
-              <Route exact path="/login" element={<LoginPage/>} />
+              <Route exact path="/home" element={<LandingPage/>} />
+              <Route exact path="/" element={<LoginPage/>} />
               <Route exact path="/register" element={<RegisterPage/>} />
               <Route exact path="/inventory" element={<InventoryPage/>} />
               <Route exact path="/track" element={<SupplyChainPage/>} />
