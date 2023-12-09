@@ -1,13 +1,13 @@
 import React from 'react'
-import UserSignUp from '../components/UserSignUp'
 import { AuthProvider } from '../context/AuthContext'
 import HomeNavbar from '../components/Navbars/HomeNavbar'
-const RegisterPage = () => {
+import FarmerLogin from '../components/FarmerLogin'
+const FarmerLoginPage= () => {
   return (
     <AuthProvider>
       <HomeNavbar/>
-      <UserSignUp/>
+      <FarmerLogin/>
     </AuthProvider>  
   )
 }
-export default RegisterPage; 
+export default FarmerLoginPage; 

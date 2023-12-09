@@ -18,8 +18,10 @@ import {
 } from "reactstrap";
 import { useAuth } from "../context/AuthContext";
 import { Link, useNavigate } from "react-router-dom";
+import { sendRequest } from "../utils/ResDbClient";
+import { GENERATE_KEYS } from "../utils/ResDbApis";
 
-export default function UserSignup() {
+export default function FarmerSignup() {
   const emailRef = useRef();
   const passwordRef = useRef();
   const passwordConfirmRef = useRef();
@@ -39,11 +41,13 @@ export default function UserSignup() {
 
     try {
       setLoading(true);
-      await signup(emailRef.current.value, passwordRef.current.value);
-      history("/inventory");
-    } catch (error) {
-      console.log(error)
-      setError("Failed to create an account");
+      sendRequest(GENERATE_KEYS).then((res) => {
+        console.log("Generated keys successfully ", res);
+      });
+      await signup(emailRef.current.value , passwordRef.current.value);
+      navigate("/adminlogin");
+    } catch (err) {
+      setError(err.message);
     }
     setLoading(false);
   };
@@ -141,16 +145,16 @@ export default function UserSignup() {
                       </CardFooter>
                     </Card>
                     <div className="text-center">
-                      Already have an account? <Link to="/">Log In</Link>
+                      Already have an account? <Link to="/adminlogin">Log In</Link>
                     </div>
                   </Col>
                   <Col>
                     <img
-                      width={"60%"}
+                      width={"70%"}
                       style={{ float: "right" }}
                       alt="..."
                       className="img-fluid"
-                      src={require("../assets/img/field.png")}
+                      src={require("../assets/img/basket.png")}
                     />
                   </Col>
                 </Row>

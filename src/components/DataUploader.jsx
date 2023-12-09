@@ -174,12 +174,6 @@ function DataUploader() {
           </div>
         </div>
         <div className="section" id="inventory-section" style={{marginLeft: '-10rem'}}>
-          {/* <img
-            alt="..."
-            className="path"
-            width="100%"
-            src={require("../assets/img/waves.png")}
-          /> */}
           <Container style={{ marginTop: "2rem" }}>
             {inventory.length > 0 ? (
               <table className="tablesorter" >
