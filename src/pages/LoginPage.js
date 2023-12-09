@@ -1,11 +1,11 @@
 import React from 'react'
 import Login from '../components/Login'
 import { AuthProvider } from '../context/AuthContext'
-import IndexNavbar from '../components/Navbars/IndexNavbar'
+import HomeNavbar from '../components/Navbars/HomeNavbar'
 const LoginPage= () => {
   return (
     <AuthProvider>
-      <IndexNavbar/>
+      <HomeNavbar/>
       <Login/>
     </AuthProvider>  
   )
