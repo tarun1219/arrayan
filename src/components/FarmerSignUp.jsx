@@ -21,7 +21,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { sendRequest } from "../utils/ResDbClient";
 import { GENERATE_KEYS } from "../utils/ResDbApis";
 
-export default function UserSignup() {
+export default function FarmerSignup() {
   const emailRef = useRef();
   const passwordRef = useRef();
   const passwordConfirmRef = useRef();
@@ -45,7 +45,7 @@ export default function UserSignup() {
         console.log("Generated keys successfully ", res);
       });
       await signup(emailRef.current.value , passwordRef.current.value);
-      navigate("/");
+      navigate("/adminlogin");
     } catch (err) {
       setError(err.message);
     }
@@ -145,7 +145,7 @@ export default function UserSignup() {
                       </CardFooter>
                     </Card>
                     <div className="text-center">
-                      Already have an account? <Link to="/">Log In</Link>
+                      Already have an account? <Link to="/adminlogin">Log In</Link>
                     </div>
                   </Col>
                   <Col>
