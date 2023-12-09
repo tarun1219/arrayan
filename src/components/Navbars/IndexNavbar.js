@@ -143,15 +143,15 @@ export default function IndexNavbar() {
                 <i className="tim-icons icon-single-02" /> My Inventory
               </Button>
             </NavItem>
-            {/* <NavItem>
+            <NavItem>
               <Button
                 className="nav-link d-none d-lg-block"
                 color="default"
-                onClick={()=>handleLogout()}
+                onClick={()=>navigate("/")}
               >
                 Log out
               </Button>
-            </NavItem> */}
+            </NavItem>
           </Nav>
         </Collapse>
       </Container>
