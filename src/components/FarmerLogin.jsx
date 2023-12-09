@@ -19,7 +19,7 @@ import { useAuth } from "../context/AuthContext";
 import { Link, useNavigate } from "react-router-dom";
 import GoogleButton from "react-google-button";
 
-export default function Login() {
+export default function FarmerLogin() {
   const emailRef = useRef();
   const passwordRef = useRef();
   const { login, googleSignIn } = useAuth();
@@ -101,15 +101,6 @@ export default function Login() {
                         Login
                       </Button>
                     </CardFooter>
-                    <CardFooter>
-                    <div style={{ margin: '0 auto', textAlign: 'center' }}>
-                      <GoogleButton
-                        className="g-btn"
-                        type="dark"
-                        onClick={handleGoogleSignIn}
-                      />
-                    </div>
-                    </CardFooter>
                   </Card>
                   {/* <Card>
           <Card.Body>
@@ -138,7 +129,7 @@ export default function Login() {
                     Need an account? <Link to="/register">Sign Up</Link>
                   </div>
                   <div className="w-100 text-center mt-2">
-                    Farmer? <Link to="/adminlogin">Login</Link>
+                    User? <Link to="/">Login</Link>
                   </div>
                 </Col>
                 <Col>

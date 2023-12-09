@@ -6,8 +6,8 @@ import { BrowserRouter as Router, Routes, Route } from "react-router-dom"
 import React from "react"
 import InventoryPage from "./pages/InventoryPage";
 import SupplyChainPage from "./pages/SupplyChainPage";
-
-
+import FarmerLoginPage from "./pages/FarmerLoginPage.jsx";
+import FarmerSignup from "./components/FarmerSignUp";
 function App() {
   return (
     
@@ -17,6 +17,8 @@ function App() {
             <Routes>
               <Route exact path="/home" element={<LandingPage/>} />
               <Route exact path="/" element={<LoginPage/>} />
+              <Route exact path="/adminlogin" element={<FarmerLoginPage/>} />
+              <Route exact path="/adminsignup" element={<FarmerSignup/>} />
               <Route exact path="/register" element={<RegisterPage/>} />
               <Route exact path="/inventory" element={<InventoryPage/>} />
               <Route exact path="/track" element={<SupplyChainPage/>} />
