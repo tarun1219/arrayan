@@ -1,6 +1,6 @@
 # Arrayan
 
-Arrayan is a Food Supply Chain application built on the blockchain fabric of Resilient DB that tracks the products, by-products, and process history through the Food Supply Chain.
+Arrayan is a Food Supply Chain application built on the blockchain fabric of ResilientDB that tracks the products, by-products, and process history through the Food Supply Chain.
 
 - Web Application: Built using React JS, [Create React App](https://github.com/facebook/create-react-app), [React Official Website](https://react.dev/)
 - Database: Powered by [ResilientDB](https://resilientdb.com/)
@@ -8,7 +8,7 @@ Arrayan is a Food Supply Chain application built on the blockchain fabric of Res
 
 ## Modifications
 
-We have modified the existing [Resilient DB GraphQL APIs](https://github.com/ResilientApp/ResilientDB-GraphQL) catering the needs of a blockchain-based food supply chain and added a new API to fetch the products in the [forked repo](https://github.com/Amoolya-Reddy/ResilientDB-GraphQL)
+We have modified the existing [ResilientDB GraphQL APIs](https://github.com/ResilientApp/ResilientDB-GraphQL) catering the needs of a blockchain-based food supply chain and added a new API to fetch the products in the [forked repo](https://github.com/Amoolya-Reddy/ResilientDB-GraphQL)
 
 ## Features and User Guide
 
@@ -30,7 +30,30 @@ We have modified the existing [Resilient DB GraphQL APIs](https://github.com/Res
 - **Claiming By-Products**: Consumers can easily claim by-products in the process, fostering a circular economy. This feature empowers consumers to actively participate in sustainable practices. The consumer can communicate with the organizations using this feature through email.
 
 ## Steps to run the system
-Please follow the detailed procedure below and ensure that every step is successful.
+
+Download NodeJS from [here](https://nodejs.org/en/download) and ensure that it’s added to PATH.
+
+Clone the repo of arrayan to get started:
+    
+    git clone https://github.com/Amoolya-Reddy/arrayan.git
+
+Then navigate inside the ResVault directory:
+    
+    cd arrayan
+
+Install the dependencies:
+    
+    npm install
+
+Start the project:
+    
+    npm start
+
+Build the project:
+    
+    npm run build
+
+The above code uses online instance of ResilientDB and the application is ready to be launched. For further exploration, below steps can be followed to setup and play around with local instance.
 
 ### Setup Python3.10
 Ensure you have Python3.10, otherwise download it and set it up as default.
@@ -93,27 +116,5 @@ Start the GraphQL server:
     
     python3 app.py
 
-### Setup Arrayan
-Download NodeJS from [here](https://nodejs.org/en/download) and ensure that it’s added to PATH.
-
-Clone the repo of arrayan to get started:
-    
-    git clone https://github.com/tarun1219/arrayan.git
-
-Then navigate inside the ResVault directory:
-    
-    cd arrayan
-
-Install the dependencies:
-    
-    npm install
-
-Start the project:
-    
-    npm start
-
-Build the project:
-    
-    npm run build
 
 Setup cited from [ResVault](https://blog.resilientdb.com/2023/09/21/ResVault.html#prerequisites)

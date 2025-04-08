@@ -26,18 +26,17 @@ export default function UserSignup() {
   const { signup, currentUser } = useAuth();
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
-  const navigate = useNavigate();
+  const history = useNavigate();
 
-  const handleSubmit = async (e) => {
+  async function handleSubmit(e) {
     e.preventDefault();
-
-    setError("");
 
     if (passwordRef.current.value !== passwordConfirmRef.current.value) {
       return setError("Passwords do not match");
     }
 
     try {
+      setError("");
       setLoading(true);
       await signup(emailRef.current.value, passwordRef.current.value);
       history("/inventory");
@@ -45,29 +44,9 @@ export default function UserSignup() {
       console.log(error)
       setError("Failed to create an account");
     }
+
     setLoading(false);
-  };
-  // async function handleSubmit(e) {
-  //   e.preventDefault();
-
-  //   if (passwordRef.current.value !== passwordConfirmRef.current.value) {
-  //     return setError("Passwords do not match");
-  //   }
-
-  //   try {
-  //     setError("");
-  //     setLoading(true);
-  //     sendRequest(GENERATE_KEYS).then((res) => {
-  //       console.log("Generated keys successfully ", res);
-  //     });
-  //     await signup(emailRef.current.value, passwordRef.current.value);
-  //     history.push("/");
-  //   } catch {
-  //     setError("Failed to create an account");
-  //   }
-
-  //   setLoading(false);
-  // }
+  }
 
   return (
     <>
@@ -141,7 +120,7 @@ export default function UserSignup() {
                       </CardFooter>
                     </Card>
                     <div className="text-center">
-                      Already have an account? <Link to="/">Log In</Link>
+                      Already have an account? <Link to="/login">Log In</Link>
                     </div>
                   </Col>
                   <Col>

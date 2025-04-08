@@ -5,23 +5,25 @@ import { AuthProvider } from './context/AuthContext'
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom"
 import React from "react"
 import InventoryPage from "./pages/InventoryPage";
+import ContactusPage from "./pages/ContactUsPage";
 import SupplyChainPage from "./pages/SupplyChainPage";
-import FarmerLoginPage from "./pages/FarmerLoginPage.jsx";
-import FarmerSignup from "./components/FarmerSignUp";
+import SmartContract from "./pages/SmartContract";
+import MyContractPage from "./pages/MyContractPage";
 function App() {
   return (
     
       <div>
-        <Router>
+        <Router basename={process.env.PUBLIC_URL}>
           <AuthProvider>
             <Routes>
-              <Route exact path="/home" element={<LandingPage/>} />
-              <Route exact path="/" element={<LoginPage/>} />
-              <Route exact path="/adminlogin" element={<FarmerLoginPage/>} />
-              <Route exact path="/adminsignup" element={<FarmerSignup/>} />
+              <Route exact path="/" element={<LandingPage/>} />
+              <Route exact path="/login" element={<LoginPage/>} />
               <Route exact path="/register" element={<RegisterPage/>} />
               <Route exact path="/inventory" element={<InventoryPage/>} />
+              <Route exact path="/contactus" element={<ContactusPage/>} />
               <Route exact path="/track" element={<SupplyChainPage/>} />
+              <Route exact path="/smartcontract" element={<SmartContract/>} />
+              <Route exact path="/my-contracts" element={<MyContractPage/>} />
               {/* <Route path="/" component={Dashboard} /> */}
             </Routes>
           </AuthProvider>

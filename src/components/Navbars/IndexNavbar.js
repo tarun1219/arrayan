@@ -1,5 +1,22 @@
+/*!
+
+=========================================================
+* BLK Design System React - v1.2.2
+=========================================================
+
+* Product Page: https://www.creative-tim.com/product/blk-design-system-react
+* Copyright 2023 Creative Tim (https://www.creative-tim.com)
+* Licensed under MIT (https://github.com/creativetimofficial/blk-design-system-react/blob/main/LICENSE.md)
+
+* Coded by Creative Tim
+
+=========================================================
+
+* The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
+
+*/
 import React, { useContext } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 // reactstrap components
 import {
   Button,
@@ -15,11 +32,11 @@ import {
   Container,
   Row,
   Col,
+  NavLink
 } from "reactstrap";
 import { AuthContext, useAuth } from "../../context/AuthContext";
 
 export default function IndexNavbar() {
-  let navigate = useNavigate();
   const [collapseOpen, setCollapseOpen] = React.useState(false);
   const [collapseOut, setCollapseOut] = React.useState("");
   const [color, setColor] = React.useState("navbar-transparent");
@@ -101,59 +118,41 @@ export default function IndexNavbar() {
             </Row>
           </div>
           <Nav navbar>
-            {/* <NavItem className="p-0">
+          <NavItem className="p-0">
               <NavLink
                 data-placement="bottom"
-                href="https://twitter.com/CreativeTim"
-                rel="noopener noreferrer"
-                target="_blank"
-                title="Follow us on Twitter"
+                tag={Link} to="/track"
               >
-                <i className="fab fa-twitter" />
-                <p className="d-lg-none d-xl-none">Twitter</p>
+                <i className="tim-icons icon-zoom-split" />
+                <p className="font-weight-bold">Search</p>
               </NavLink>
             </NavItem>
             <NavItem className="p-0">
               <NavLink
                 data-placement="bottom"
-                href="https://www.facebook.com/CreativeTim"
-                rel="noopener noreferrer"
-                target="_blank"
-                title="Like us on Facebook"
+                tag={Link} to="/inventory"
               >
-                <i className="fab fa-facebook-square" />
-                <p className="d-lg-none d-xl-none">Facebook</p>
+                <i className="tim-icons icon-single-02" />
+                <p className="font-weight-bold">My Inventory</p>
               </NavLink>
             </NavItem>
             <NavItem className="p-0">
               <NavLink
                 data-placement="bottom"
-                href="https://www.instagram.com/CreativeTimOfficial"
-                rel="noopener noreferrer"
-                target="_blank"
-                title="Follow us on Instagram"
+                tag={Link} to="/smartcontract"
               >
-                <i className="fab fa-instagram" />
-                <p className="d-lg-none d-xl-none">Instagram</p>
+                <i className="tim-icons icon-notes" />
+                <p className="font-weight-bold">My Contract</p>
               </NavLink>
-            </NavItem> */}
-            <NavItem>
-            <Button
-                className="nav-link d-none d-lg-block"
-                color="default"
-                onClick={()=>navigate("/track")}
-              >
-                <i className="tim-icons icon-zoom-split" /> Search
-              </Button>
             </NavItem>
-            <NavItem>
-              <Button
-                className="nav-link d-none d-lg-block"
-                color="default"
-                onClick={()=>navigate("/inventory")}
+            <NavItem className="p-0">
+              <NavLink
+                data-placement="bottom"
+                tag={Link} to="/contactus"
               >
-                <i className="tim-icons icon-single-02" /> My Inventory
-              </Button>
+                <i className="tim-icons icon-email-85" />
+                <p className="font-weight-bold">Contact Us</p>
+              </NavLink>
             </NavItem>
             {
               currentUser==null?
@@ -185,6 +184,7 @@ export default function IndexNavbar() {
                 className="nav-link d-none d-lg-block"
                 color="default"
                 onClick={async ()=>await logout()}
+                data-placement="bottom"
               >
                 <i className="tim-icons icon-button-power" /> Logout
               </Button>

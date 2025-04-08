@@ -35,7 +35,7 @@ export default function Footer() {
               <Button
                 className="btn-icon btn-neutral btn-round btn-simple"
                 color="default"
-                href="https://github.com/tarun1219/arrayan"
+                href="https://github.com/Amoolya-Reddy/arrayan"
                 id="tooltip622135962"
                 target="_blank"
               >
@@ -44,7 +44,7 @@ export default function Footer() {
             </div>
           </Col>
           <Col className="text-center">
-           <p style={{marginTop: '20%'}}>Built on Resilient DB</p> 
+           <p style={{marginTop: '20%'}}>Built on ResilientDB</p> 
           </Col>
           <Col className="text-center">
            <p style={{marginTop: '20%'}}>© 2023 Arrayán. All Rights Reserved.</p> 
