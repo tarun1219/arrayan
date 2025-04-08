@@ -1,4 +1,3 @@
-
 import React, { useRef, useState } from "react";
 import {
   Form,
@@ -17,38 +16,29 @@ import {
 } from "reactstrap";
 import { useAuth } from "../context/AuthContext";
 import { Link, useNavigate } from "react-router-dom";
-import GoogleButton from "react-google-button";
 
 export default function Login() {
   const emailRef = useRef();
   const passwordRef = useRef();
-  const { login, googleSignIn } = useAuth();
+  const { login } = useAuth();
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
-  const navigate = useNavigate();
+  const history = useNavigate();
 
-  const handleSubmit = async (e) => {
-    console.log(emailRef.current.value, passwordRef.current.value);
-    e.preventDefault();
-    setError("");
-    try {
-      await login(emailRef.current.value, passwordRef.current.value);
-      navigate("/home");
-    } catch (err) {
-      setError(err.message);
-    }
-    setLoading(false);
-  };
-
-  const handleGoogleSignIn = async (e) => {
+  async function handleSubmit(e) {
     e.preventDefault();
     try {
-      await googleSignIn();
-      navigate("/home");
+      setError("");
+      setLoading(true);
+      const loginSuccessful = await login(emailRef.current.value, passwordRef.current.value);
+      if(loginSuccessful) history("/inventory");
     } catch (error) {
-      console.log(error.message);
+      let errorMessage = "Failed to login: " + error.message
+      setError(errorMessage);
     }
-  };
+
+    setLoading(false);
+  }
 
   return (
     <>
@@ -81,7 +71,6 @@ export default function Login() {
                           placeholder="Email"
                           type="text"
                         />
-                        
                         <Input
                           style={{ marginTop: "1rem" }}
                           innerRef={passwordRef}
@@ -100,15 +89,6 @@ export default function Login() {
                       >
                         Login
                       </Button>
-                    </CardFooter>
-                    <CardFooter>
-                    <div style={{ margin: '0 auto', textAlign: 'center' }}>
-                      <GoogleButton
-                        className="g-btn"
-                        type="dark"
-                        onClick={handleGoogleSignIn}
-                      />
-                    </div>
                     </CardFooter>
                   </Card>
                   {/* <Card>
@@ -136,9 +116,6 @@ export default function Login() {
                   </div>
                   <div className="w-100 text-center mt-2">
                     Need an account? <Link to="/register">Sign Up</Link>
-                  </div>
-                  <div className="w-100 text-center mt-2">
-                    Farmer? <Link to="/adminlogin">Login</Link>
                   </div>
                 </Col>
                 <Col>
