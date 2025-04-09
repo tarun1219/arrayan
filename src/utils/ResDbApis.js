@@ -14,10 +14,9 @@ export const POST_TRANSACTION = (metadata, asset) => `mutation {
   signerPublicKey: "${metadata?.signerPublicKey}",
   signerPrivateKey: "${metadata?.signerPrivateKey}",
   recipientPublicKey: "${metadata?.recipientPublicKey}",
-  asset: """{
-    "data": ${asset},    
+  asset: {
+    data: ${asset},    
   }
-  """
   }){
   id
   }
@@ -49,8 +48,23 @@ export const constructTransaction = (metadata, item) => {
     signerPublicKey: "${metadata?.signerPublicKey}",
     signerPrivateKey: "${metadata?.signerPrivateKey}",
     recipientPublicKey: "${item.recipientPublicKey}",,
-     asset: """{
-      "data": ${JSON.stringify(updatedAsset)}
-    }"""
+     asset: {
+      data: ${JSON.stringify(updatedAsset).replace(/"([^"]+)":/g, '$1:').replace(/,(\s*[}\]])/g, '$1')}
+    }
     }`;  
 }
+
+export const POST_SMART_CONTRACT = (metadata, asset) => `mutation {
+  postTransaction(data: {
+    operation: "CREATE",
+    amount: 100,
+    signerPublicKey: "${metadata?.signerPublicKey}",
+    signerPrivateKey: "${metadata?.signerPrivateKey}",
+    recipientPublicKey: "${metadata?.recipientPublicKey}",
+    asset: """{
+      "data": ${asset}
+    }"""
+  }) {
+    id
+  }
+}`;

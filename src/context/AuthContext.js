@@ -1,6 +1,6 @@
 import React, { useContext, useEffect, useState } from 'react'
 import { auth, database } from '../auth/firebaseAuthSDK'
-import { sendRequest } from '../utils/ResDbClient'
+import { sendRequest, keyGenerate } from '../utils/ResDbClient'
 import { GENERATE_KEYS } from '../utils/ResDbApis'
 import { ref, get, set } from 'firebase/database'; 
 
@@ -34,8 +34,8 @@ export function AuthProvider({ children }) {
     const userId = response.user.uid;
 
     try {
-        const res = await sendRequest(GENERATE_KEYS);
-        const { publicKey, privateKey } = res.data.generateKeys;
+        const res = keyGenerate();
+        const { publicKey, privateKey } = res;
 
         await set(ref(database, 'users/' + userId), {
             publicKey: publicKey,

@@ -14,7 +14,7 @@ import { sendRequest } from "./../../utils/ResDbClient";
 import { firestoreDB } from "./../../auth/firebaseAuthSDK";
 import Timeline from "./Timeline";
 import { AuthContext } from "./../../context/AuthContext";
-import { deleteClaimedTransactionIds, saveTransactionsToFirestore } from "../../context/FirestoreContext";
+import { deleteClaimedTransactionIds, saveTransactionsToFirestore, fetchSmartContractsFromFirestore} from "../../context/FirestoreContext";
 import { useNavigate } from "react-router-dom";
 
 function ProductTracker() {
@@ -28,6 +28,8 @@ function ProductTracker() {
   const [selectedProduct, setSelectedProduct] = useState('');
   const [options, setOptions] = useState([]);
   const [selectedKeys, setSelectedKeys] = useState({});
+  const [manualSelectedKeys, setManualSelectedKeys] = useState({});
+  const [autoSelectedKeys, setAutoSelectedKeys] = useState({});
   const [confirmedItems, setConfirmedItems] = useState({});
   const {currentUser, userKeys} = useContext(AuthContext);
   const [isSubmitted, setIsSubmitted] = useState(false);
@@ -38,15 +40,17 @@ function ProductTracker() {
   const metadata = {
     signerPublicKey: userKeys?.publicKey,
     signerPrivateKey: userKeys?.privateKey,
-  };
+    recipientPublicKey: userKeys?.publicKey,
+  }; 
 
-  const updateFireStore = async (claimedItems) => {
+  const updateFireStore = async (claimedItems, finalSelected) => {
     let claimedTxnIds = [];
     let industryMap = {};
     let monthlyTransactionCounts = {}; 
     try {
-      const promises = Object.values(selectedKeys).map(async (item) => {
+      const promises = Object.values(finalSelected).map(async (item) => {
         const txn = constructTransaction(metadata, item)
+        const query = POST_UPDATED_TRANSACTION(txn);
         const res = await sendRequest(POST_UPDATED_TRANSACTION(txn));
         const industry = product;
         const transactionId = res?.data?.postTransaction?.id;
@@ -55,7 +59,6 @@ function ProductTracker() {
             industryMap[industry] = [];
           }
           industryMap[industry].push(transactionId);
-          // For metadata and dashboard
           const currentDate = new Date();
           const yearMonth = `${currentDate.getFullYear()}-${String(currentDate.getMonth() + 1).padStart(2, "0")}`;
       
@@ -79,23 +82,55 @@ function ProductTracker() {
         ...prevState,
         ...Object.fromEntries(claimedItems.map((key) => [key, true])),
       }));
-
-      console.log('Claimed Objects:', claimedItems);
-      alert(`Claim Successful!`);
+      if (Object.keys(manualSelectedKeys).length !== 0) {
+        alert(`Claim Successful!`);
+      }
     } catch (error) {
 
     }
   }
-
-  const handleClaimClick = (productName, items) => {
-    setSelectedProduct(productName);
+  const handleClaimClick = async (byproductName, items) => {
+    setSelectedProduct(byproductName);
     setOptions(items);
-    setSelectedKeys({});
-    toggleModal();
+    setManualSelectedKeys({});
+    const fetchedContracts = await fetchSmartContractsFromFirestore(metadata.signerPublicKey);
+    let autoSelected = {};
+    for (const item of items) {
+      const itemKey = String(item.key);
+      const sourceName = `${item.info.Name} - ${item.info.Description}`.trim();
+      const matchingContracts = fetchedContracts.filter((contract) =>
+        contract.product === product &&
+        contract.byproduct === byproductName &&
+        contract.source.trim() === sourceName
+      );
+      const itemTimestamp = new Date(item.info.Timestamp);
+      const isValid = matchingContracts.some((contract) => {
+        const contractEndDate = new Date(contract.endDate);
+        return itemTimestamp < contractEndDate;
+      });
+  
+      if (isValid) {
+        autoSelected[itemKey] = item;
+        break;
+      }
+    }
+    setAutoSelectedKeys(autoSelected);
+    if (Object.keys(autoSelected).length > 0) {
+      handleConfirmClaim(autoSelected);
+    }
+    setTimeout(() => {
+      toggleModal();
+    }, 100);
+  };
+  
+  
+
+  const getFinalSelectedKeys = () => {
+    return { ...autoSelectedKeys, ...manualSelectedKeys };
   };
 
   const handleCheckboxChange = (item) => {
-    setSelectedKeys((prevState) => {
+    setManualSelectedKeys((prevState) => {
       const updatedState = { ...prevState };
       if (updatedState[item.key]) {
         delete updatedState[item.key];
@@ -106,20 +141,20 @@ function ProductTracker() {
     });
   };
 
-  const handleConfirmClaim = async () => {
-    const claimedItems = Object.values(selectedKeys).map(item => item.key);
-
+  const handleConfirmClaim = async (localAutoSelected = null) => {
+    const finalSelected = localAutoSelected || { ...autoSelectedKeys, ...manualSelectedKeys };
+    const claimedItems  = Object.keys(finalSelected);
+  
     if (claimedItems.length === 0) {
       alert('Please select at least one item to claim.');
       toggleModal();
       return;
     }
-
-    await updateFireStore(claimedItems);
+  
+    await updateFireStore(claimedItems, finalSelected);
     toggleModal();
   };
-
-
+  
   const handleSubmit = async (e) => {
     e.preventDefault();
     setTimeout(() => {
@@ -160,7 +195,7 @@ function ProductTracker() {
       for(const id of txnIds){
         const res = await sendRequest(GET_TRANSACTION(id));
         if(res && res.data) {
-          let info = JSON.parse(res.data.getTransaction.asset.replace(/'/g, '"')).data;
+          let info = res.data.getTransaction.asset.data;
           let recipientPublicKey = res?.data?.getTransaction.signerPublicKey;
           let op = info["OutputProducts"];
           let ip = info["InputProduct"];
@@ -330,21 +365,26 @@ function ProductTracker() {
         <i className="tim-icons icon-simple-remove" />
       </button>
       </ModalHeader>
-        <ModalBody>
-            {options.map((item, idx) => (
-              <div key={item.key}>
-                {item.info.Name} - {item.info.Description}
-                <div className="float-right">
-                <Input
-                  type="checkbox"
-                  checked={selectedKeys[item.key] || false}
-                  onChange={() => handleCheckboxChange(item)}
-                  disabled={confirmedItems && confirmedItems[item.key]}
-                />
-                </div>
-              </div>
-            ))}
-        </ModalBody>
+      <ModalBody>
+        {options.map((item) => (
+          <div key={item.key}>
+            {item.info.Name} - {item.info.Description}
+            <div className="float-right">
+              <Input
+                type="checkbox"
+                checked={!!getFinalSelectedKeys()[item.key]}
+                onChange={() => handleCheckboxChange(item)}
+                disabled={!!confirmedItems[item.key]}
+              />
+              {autoSelectedKeys[item.key] && (
+                <span style={{ color: "green", fontSize: "0.9em", marginLeft: "0.5rem" }}>
+                  Acquired by contract
+                </span>
+              )}
+            </div>
+          </div>
+        ))}
+      </ModalBody>
         <ModalFooter>
         {currentUser==null?
           <Button
@@ -354,7 +394,7 @@ function ProductTracker() {
         >
           <i className="tim-icons icon-badge" /> Please log in to claim
         </Button>:
-          <Button color="success" onClick={handleConfirmClaim}>
+          <Button color="success" onClick={() => handleConfirmClaim()}>
             Claim
           </Button>}
           <Button color="secondary" onClick={toggleModal}>
@@ -380,5 +420,5 @@ function ProductTracker() {
     </>
   );
 }
-
 export default ProductTracker;
+
