@@ -1,0 +1,60 @@
+name: Deploy React App to GitHub Pages
+
+on:
+  push:
+    branches:
+      - main
+
+permissions:
+  contents: write
+  pages: write
+  id-token: write
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Create .env file
+        run: |
+          echo "REACT_APP_ADMIN_PUBLIC_KEY=${{ secrets.REACT_APP_ADMIN_PUBLIC_KEY }}" >> .env
+          echo "REACT_APP_FIREBASE_APIKEY=${{ secrets.REACT_APP_FIREBASE_APIKEY }}" >> .env
+          echo "REACT_APP_FIREBASE_APPID=${{ secrets.REACT_APP_FIREBASE_APPID }}" >> .env
+          echo "REACT_APP_FIREBASE_AUTHDOMAIN=${{ secrets.REACT_APP_FIREBASE_AUTHDOMAIN }}" >> .env
+          echo "REACT_APP_FIREBASE_MEASUREMENTID=${{ secrets.REACT_APP_FIREBASE_MEASUREMENTID }}" >> .env
+          echo "REACT_APP_FIREBASE_MESSAGINGSENDERID=${{ secrets.REACT_APP_FIREBASE_MESSAGINGSENDERID }}" >> .env
+          echo "REACT_APP_FIREBASE_PROJECTID=${{ secrets.REACT_APP_FIREBASE_PROJECTID }}" >> .env
+          echo "REACT_APP_FIREBASE_STORAGEBUCKET=${{ secrets.REACT_APP_FIREBASE_STORAGEBUCKET }}" >> .env
+
+      - name: Build the app
+        run: CI=false npm run build
+
+      - name: Upload artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: 'build'
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: 'https://arrayan.resilientdb.com/'
+
+    steps:
+      - name: Setup Pages
+        uses: actions/configure-pages@v5
+
+      - name: Deploy to GitHub Pages
+        uses: actions/deploy-pages@v4
